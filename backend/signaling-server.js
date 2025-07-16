@@ -6,7 +6,7 @@ const http = require('http');
 const app = express();
 app.use(cors());
 
-// Simple health check route
+// Health check route
 app.get('/', (req, res) => {
   res.send('Hey from server');
 });
@@ -39,8 +39,10 @@ io.on('connection', (socket) => {
   socket.on('signal', ({ target, signal }) => {
     const targetSocket = clients.get(target);
     if (targetSocket) {
+      // Find the sender's ID
+      const fromId = [...clients].find(([_, s]) => s === socket)?.[0];
       targetSocket.emit('signal', {
-        from: [...clients].find(([_, s]) => s === socket)[0],
+        from: fromId,
         signal
       });
     }

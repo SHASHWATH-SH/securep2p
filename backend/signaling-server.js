@@ -54,12 +54,13 @@
 //   console.log('Signaling server running on https://172.17.3.195:8080');
 // });
 // signaling-server.js
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+// const fs = require('fs');
+// const path = require('path');
+// const https = require('https');
 const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const http = require('http');
 
 const app = express();
 app.use(cors());
@@ -68,10 +69,7 @@ app.get('/', (req, res) => {
   res.send('Hey from server');
 });
 
-const server = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-}, app);
+const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
